@@ -23,11 +23,14 @@ form,.calc,.preview{background:#fff;border-radius:16px;padding:16px}.field{margi
 .save{width:100%;padding:13px;border:0;border-radius:12px;background:#111827;color:#fff;font-weight:800}
 .preview{margin:14px 0;background:#f8fafc}.previewTitle{font-size:12px;color:#666}.previewText{font-weight:700;margin-top:5px}
 .calc{margin-top:14px}.calc h3{margin:0 0 8px}.calcInput{width:100%;padding:13px;border:1px solid #d9dce1;border-radius:10px;font-size:18px}.calcResult{font-size:25px;font-weight:850;margin-top:12px}.small{color:#666;font-size:13px}
+.paintQuick{margin-top:14px;background:#fff8e1;border:1px solid #f0c84b;border-radius:14px;padding:14px}.paintQuick h3{margin:0 0 10px}.paintQuickRow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed #d8c98d}.paintQuickRow:last-child{border-bottom:0}.paintQuickPrice{font-size:19px;font-weight:850}
 .empty{color:#666;padding:15px 3px}
 .hidden{display:none!important}
 </style>
 </head>
+
 <body>
+
 <header>
 <button id="backBtn" class="back hidden" onclick="goHome()">← Volver</button>
 <h1>🧰 Precios de Materiales</h1>
@@ -35,221 +38,890 @@ form,.calc,.preview{background:#fff;border-radius:16px;padding:16px}.field{margi
 </header>
 
 <main>
+
 <section id="home">
+
 <div class="searchWrap">
 <input id="search" class="search" placeholder="🔍 Buscar material..." autocomplete="off">
 <button class="clear" onclick="clearSearch()">×</button>
 </div>
+
 <div id="categories" class="grid"></div>
+
 <button class="secondary" onclick="newCategory()">＋ Nueva categoría</button>
 
-<div class="sectionHead"><h2>Todos los materiales</h2><span id="count" class="count"></span></div>
+<div class="sectionHead">
+<h2>Todos los materiales</h2>
+<span id="count" class="count"></span>
+</div>
+
 <div id="materials"></div>
+
 <button class="fab" onclick="openForm()">＋ Agregar material</button>
+
 </section>
 
 <section id="categoryView" class="hidden">
+
 <h2 id="categoryTitle"></h2>
 <div id="categoryMaterials"></div>
+
 <button class="fab" onclick="openForm()">＋ Agregar material</button>
+
 </section>
 
 <section id="detailView" class="hidden">
+
 <h2 id="detailTitle"></h2>
 <div id="detail"></div>
+
 </section>
 
 <section id="formView" class="hidden">
+
 <h2 id="formTitle">Agregar material</h2>
+
 <form id="materialForm">
-<div class="field"><label>Material</label><input id="name" required placeholder="Ej. Tubo cuadrado 2×2"></div>
-<div class="field"><label>Categoría</label><select id="category"></select></div>
-<div class="field"><label>Precio de compra</label><input id="price" required type="number" min="0" step="0.01" placeholder="10.00"></div>
-<div class="field"><label>Unidad de compra</label>
+
+<div class="field">
+<label>Material</label>
+<input id="name" required placeholder="Ej. Tubo cuadrado 2×2">
+</div>
+
+<div class="field">
+<label>Categoría</label>
+<select id="category"></select>
+</div>
+
+<div class="field">
+<label>Precio de compra</label>
+<input id="price" required type="number" min="0" step="0.01" placeholder="10.00">
+</div>
+
+<div class="field">
+<label>Unidad de compra</label>
+
 <select id="purchaseUnit">
-<option>Unidad</option><option>Barra</option><option>Rollo</option><option>Lámina</option><option>Kg</option><option>Litro</option><option>Juego</option><option>Otra</option>
-</select></div>
-<div class="field"><label>Unidad para calcular</label>
-<select id="calcUnit">
-<option>Metro</option><option>m²</option><option>Pie</option><option>Kg</option><option>Litro</option><option>Unidad</option>
+<option>Unidad</option>
+<option>Barra</option>
+<option>Rollo</option>
+<option>Lámina</option>
+<option>Kg</option>
+<option>Litro</option>
+<option>Galón</option>
+<option>Juego</option>
+<option>Otra</option>
 </select>
-<div class="hint">Ej.: una barra de tubo trae 6 metros.</div></div>
-<div class="field"><label>Cantidad que trae una unidad de compra</label><input id="purchaseQty" required type="number" min="0.0001" step="0.0001" placeholder="6"></div>
-<div class="field"><label>Proveedor (opcional)</label><input id="supplier" placeholder="Ej. Ferretería"></div>
-<div class="field"><label>Foto del material (opcional)</label><input id="photo" type="file" accept="image/*"></div>
-<div class="preview"><div class="previewTitle">Vista previa</div><div id="previewText" class="previewText">Completa los datos para ver el resumen.</div></div>
-<button id="saveBtn" class="save">Guardar material</button>
+
+</div>
+
+<div class="field">
+
+<label>Unidad para calcular</label>
+
+<select id="calcUnit">
+<option>Metro</option>
+<option>m²</option>
+<option>Pie</option>
+<option>Kg</option>
+<option>Litro</option>
+<option>Galón</option>
+<option>Unidad</option>
+</select>
+
+<div class="hint">
+Ej.: una barra de tubo trae 6 metros. Para pintura por galón, usa Galón.
+</div>
+
+</div>
+
+<div class="field">
+
+<label>Cantidad que trae una unidad de compra</label>
+
+<input id="purchaseQty"
+required
+type="number"
+min="0.0001"
+step="0.0001"
+placeholder="6">
+
+</div>
+
+<div class="field">
+
+<label>Proveedor (opcional)</label>
+
+<input id="supplier" placeholder="Ej. Ferretería">
+
+</div>
+
+<div class="field">
+
+<label>Foto del material (opcional)</label>
+
+<input id="photo" type="file" accept="image/*">
+
+</div>
+
+<div class="preview">
+
+<div class="previewTitle">Vista previa</div>
+
+<div id="previewText" class="previewText">
+Completa los datos para ver el resumen.
+</div>
+
+</div>
+
+<button id="saveBtn" class="save">
+Guardar material
+</button>
+
 </form>
+
 </section>
+
 </main>
 
 <script>
+
 const defaultCategories=[
-["🔩","Tubos"],["📄","Láminas"],["▰","Platinas"],["📐","Ángulos"],
-["🔥","Electrodos"],["🪚","Discos"],["🎨","Pintura"],["📦","Otras"]
+["🔩","Tubos"],
+["📄","Láminas"],
+["▰","Platinas"],
+["📐","Ángulos"],
+["🔥","Electrodos"],
+["🪚","Discos"],
+["🎨","Pintura"],
+["📦","Otras"]
 ];
-let categories=JSON.parse(localStorage.getItem("pm_categories")||"null")||defaultCategories;
-let materials=JSON.parse(localStorage.getItem("pm_materials")||"[]");
-let editing=-1, currentCategory="";
+
+let categories=
+JSON.parse(localStorage.getItem("pm_categories")||"null")
+||defaultCategories;
+
+let materials=
+JSON.parse(localStorage.getItem("pm_materials")||"[]");
+
+let editing=-1,
+currentCategory="";
 
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 
-function persist(){localStorage.setItem("pm_materials",JSON.stringify(materials));localStorage.setItem("pm_categories",JSON.stringify(categories));}
+const esc=s=>String(s??"").replace(
+/[&<>"']/g,
+c=>({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[c])
+);
+
+function persist(){
+
+localStorage.setItem(
+"pm_materials",
+JSON.stringify(materials)
+);
+
+localStorage.setItem(
+"pm_categories",
+JSON.stringify(categories)
+);
+
+}
 
 function init(){
- renderCategories();
- populateCategorySelect();
- renderMaterials();
- ["name","price","purchaseUnit","calcUnit","purchaseQty"].forEach(id=>$(id).addEventListener("input",updatePreview));
- $("category").addEventListener("change",updatePreview);
- $("search").addEventListener("input",renderMaterials);
- $("materialForm").addEventListener("submit",saveMaterial);
+
+renderCategories();
+
+populateCategorySelect();
+
+renderMaterials();
+
+["name","price","purchaseUnit","calcUnit","purchaseQty"]
+.forEach(id=>
+$(id).addEventListener("input",updatePreview)
+);
+
+$("category").addEventListener(
+"change",
+updatePreview
+);
+
+$("search").addEventListener(
+"input",
+renderMaterials
+);
+
+$("materialForm").addEventListener(
+"submit",
+saveMaterial
+);
+
 }
+
 function renderCategories(){
- $("categories").innerHTML=categories.map(([icon,name],i)=>
- `<div class="cat" onclick="showCategory('${esc(name).replace(/'/g,"&#39;")}')">
-   <span>${icon}</span>
-   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-     <b>${esc(name)}</b>
-     <button onclick="event.stopPropagation();deleteCategory(${i})"
-       style="padding:6px 9px;border:0;border-radius:8px;background:#fee2e2;color:#991b1b">
-       🗑️
-     </button>
-   </div>
- </div>`
- ).join("");
+
+$("categories").innerHTML=
+
+categories.map(([icon,name],i)=>
+
+`<div class="cat"
+onclick="showCategory('${esc(name).replace(/'/g,"&#39;")}')">
+
+<span>${icon}</span>
+
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+
+<b>${esc(name)}</b>
+
+<button
+onclick="event.stopPropagation();deleteCategory(${i})"
+style="padding:6px 9px;border:0;border-radius:8px;background:#fee2e2;color:#991b1b">
+
+🗑️
+
+</button>
+
+</div>
+
+</div>`
+
+).join("");
+
 }
- 
- function deleteCategory(i){
- const category=categories[i][1];
 
- const hasMaterials=materials.some(m=>m.category===category);
+function deleteCategory(i){
 
- if(hasMaterials){
-   alert("No puedes eliminar esta categoría porque tiene materiales guardados dentro de ella.");
-   return;
- }
+const category=categories[i][1];
 
- if(!confirm("¿Quieres eliminar la categoría \""+category+"\"?")) return;
+const hasMaterials=
+materials.some(
+m=>m.category===category
+);
 
- categories.splice(i,1);
+if(hasMaterials){
 
- persist();
- renderCategories();
- populateCategorySelect();
+alert(
+"No puedes eliminar esta categoría porque tiene materiales guardados dentro de ella."
+);
+
+return;
+
 }
+
+if(
+!confirm(
+"¿Quieres eliminar la categoría \""+
+category+
+"\"?"
+)
+)return;
+
+categories.splice(i,1);
+
+persist();
+
+renderCategories();
+
+populateCategorySelect();
+
+}
+
 function populateCategorySelect(selected){
- $("category").innerHTML=categories.map(([,name])=>`<option>${esc(name)}</option>`).join("");
- if(selected) $("category").value=selected;
+
+$("category").innerHTML=
+
+categories.map(
+([,name])=>`<option>${esc(name)}</option>`
+).join("");
+
+if(selected)
+$("category").value=selected;
+
 }
+
 function renderMaterials(){
- const q=$("search").value.trim().toLowerCase();
- let list=materials.map((m,i)=>({...m,i})).filter(m=>
-   (m.name+" "+m.category+" "+(m.supplier||"")).toLowerCase().includes(q)
- );
- list.reverse();
- $("count").textContent=materials.length+" material"+(materials.length===1?"":"es");
- $("materials").innerHTML=list.length?list.map(materialCard).join(""):"<div class='empty'>No hay materiales guardados.</div>";
+
+const q=
+$("search").value
+.trim()
+.toLowerCase();
+
+let list=
+
+materials
+.map((m,i)=>({...m,i}))
+.filter(m=>
+
+(m.name+
+" "+
+m.category+
+" "+
+(m.supplier||""))
+.toLowerCase()
+.includes(q)
+
+);
+
+list.reverse();
+
+$("count").textContent=
+materials.length+
+" material"+
+(materials.length===1?"":"es");
+
+$("materials").innerHTML=
+
+list.length
+?list.map(materialCard).join("")
+:"<div class='empty'>No hay materiales guardados.</div>";
+
 }
+
 function materialCard(m){
- return `<div class="card clickable" onclick="showDetail(${m.i})">
- ${m.photo?`<img class="detailPhoto" src="${m.photo}" alt="">`:``}
- <div class="row"><div class="name">${esc(m.name)}</div><div class="price">$${Number(m.price).toFixed(2)} / ${esc(m.purchaseUnit)}</div></div>
- <div class="meta">${esc(m.category)} · ${Number(m.purchaseQty)} ${esc(m.calcUnit)} por ${esc(m.purchaseUnit)}</div>
- </div>`;
+
+return `
+
+<div class="card clickable"
+onclick="showDetail(${m.i})">
+
+${m.photo?
+`<img class="detailPhoto"
+src="${m.photo}"
+alt="">`
+:""}
+
+<div class="row">
+
+<div class="name">
+${esc(m.name)}
+</div>
+
+<div class="price">
+$${Number(m.price).toFixed(2)}
+/
+${esc(m.purchaseUnit)}
+</div>
+
+</div>
+
+<div class="meta">
+
+${esc(m.category)}
+·
+${Number(m.purchaseQty)}
+${esc(m.calcUnit)}
+por
+${esc(m.purchaseUnit)}
+
+</div>
+
+</div>
+
+`;
+
 }
+
 function showCategory(cat){
- currentCategory=cat;
- $("home").classList.add("hidden");$("detailView").classList.add("hidden");$("formView").classList.add("hidden");$("categoryView").classList.remove("hidden");$("backBtn").classList.remove("hidden");
- $("categoryTitle").textContent=cat;
- const list=materials.map((m,i)=>({...m,i})).filter(m=>m.category===cat);
- $("categoryMaterials").innerHTML=list.length?list.map(materialCard).join(""):"<div class='empty'>No hay materiales en esta categoría.</div>";
+
+currentCategory=cat;
+
+$("home").classList.add("hidden");
+$("detailView").classList.add("hidden");
+$("formView").classList.add("hidden");
+$("categoryView").classList.remove("hidden");
+$("backBtn").classList.remove("hidden");
+
+$("categoryTitle").textContent=cat;
+
+const list=
+
+materials
+.map((m,i)=>({...m,i}))
+.filter(m=>m.category===cat);
+
+$("categoryMaterials").innerHTML=
+
+list.length
+?list.map(materialCard).join("")
+:"<div class='empty'>No hay materiales en esta categoría.</div>";
+
 }
+
 function showDetail(i){
- const m=materials[i];
- $("home").classList.add("hidden");$("categoryView").classList.add("hidden");$("formView").classList.add("hidden");$("detailView").classList.remove("hidden");$("backBtn").classList.remove("hidden");
- $("detailTitle").textContent=m.name;
- const perUnit=Number(m.price)/Number(m.purchaseQty);
- $("detail").innerHTML=`<div class="card">
- ${m.photo?`<img class="detailPhoto" src="${m.photo}" alt="Foto de ${esc(m.name)}">`:``}
- <div class="row"><div><b>Precio de compra</b><div class="meta">$${Number(m.price).toFixed(2)} por ${esc(m.purchaseUnit)}</div></div><div class="price">$${perUnit.toFixed(2)} / ${esc(m.calcUnit)}</div></div>
- <div class="meta">${Number(m.purchaseQty)} ${esc(m.calcUnit)} por ${esc(m.purchaseUnit)} · ${esc(m.category)}</div>
- ${m.supplier?`<p><b>Proveedor:</b> ${esc(m.supplier)}</p>`:""}
- <div class="calc"><h3>🧮 Calcular cantidad</h3><div class="small">Escribe cualquier cantidad de ${esc(m.calcUnit)}.</div>
- <input id="quantity" class="calcInput" type="number" min="0" step="0.0001" placeholder="Ej. 200" oninput="calculate(${i})">
- <div id="calcResult" class="calcResult">—</div></div>
- <div class="actions"><button class="edit" onclick="editMaterial(${i})">✏️ Editar</button><button class="delete" onclick="deleteMaterial(${i})">🗑️ Eliminar</button></div>
- </div>`;
+
+const m=materials[i];
+
+$("home").classList.add("hidden");
+$("categoryView").classList.add("hidden");
+$("formView").classList.add("hidden");
+$("detailView").classList.remove("hidden");
+$("backBtn").classList.remove("hidden");
+
+$("detailTitle").textContent=m.name;
+
+const perUnit=
+Number(m.price)/
+Number(m.purchaseQty);
+
+const isPaintByGallon=
+
+String(m.category)
+.toLowerCase()
+.includes("pintur")
+&&
+m.calcUnit==="Galón";
+
+let quickPaint="";
+
+if(isPaintByGallon){
+
+quickPaint=`
+
+<div class="paintQuick">
+
+<h3>🎨 Precios por galón</h3>
+
+<div class="paintQuickRow">
+
+<span>¼ galón</span>
+
+<span class="paintQuickPrice">
+$${(perUnit*0.25).toFixed(2)}
+</span>
+
+</div>
+
+<div class="paintQuickRow">
+
+<span>½ galón</span>
+
+<span class="paintQuickPrice">
+$${(perUnit*0.5).toFixed(2)}
+</span>
+
+</div>
+
+<div class="paintQuickRow">
+
+<span>1 galón</span>
+
+<span class="paintQuickPrice">
+$${perUnit.toFixed(2)}
+</span>
+
+</div>
+
+</div>
+
+`;
+
 }
+
+$("detail").innerHTML=
+
+`<div class="card">
+
+${m.photo?
+`<img class="detailPhoto"
+src="${m.photo}"
+alt="Foto de ${esc(m.name)}">`
+:""}
+
+<div class="row">
+
+<div>
+
+<b>Precio de compra</b>
+
+<div class="meta">
+
+$${Number(m.price).toFixed(2)}
+por
+${esc(m.purchaseUnit)}
+
+</div>
+
+</div>
+
+<div class="price">
+
+$${perUnit.toFixed(2)}
+/
+${esc(m.calcUnit)}
+
+</div>
+
+</div>
+
+<div class="meta">
+
+${Number(m.purchaseQty)}
+${esc(m.calcUnit)}
+por
+${esc(m.purchaseUnit)}
+·
+${esc(m.category)}
+
+</div>
+
+${m.supplier?
+`<p>
+<b>Proveedor:</b>
+${esc(m.supplier)}
+</p>`
+:""}
+
+${quickPaint}
+
+<div class="calc">
+
+<h3>🧮 Calcular cantidad</h3>
+
+<div class="small">
+
+Escribe cualquier cantidad de
+${esc(m.calcUnit)}.
+
+</div>
+
+<input
+id="quantity"
+class="calcInput"
+type="number"
+min="0"
+step="0.0001"
+placeholder="Ej. ${isPaintByGallon?"0.75":"200"}"
+oninput="calculate(${i})">
+
+<div id="calcResult"
+class="calcResult">
+—
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="edit"
+onclick="editMaterial(${i})">
+
+✏️ Editar
+
+</button>
+
+<button
+class="delete"
+onclick="deleteMaterial(${i})">
+
+🗑️ Eliminar
+
+</button>
+
+</div>
+
+</div>`;
+
+}
+
 function calculate(i){
- const q=Number($("quantity").value);
- if(!q){$("calcResult").textContent="—";return;}
- $("calcResult").textContent="$"+((Number(materials[i].price)/Number(materials[i].purchaseQty))*q).toFixed(2);
+
+const q=
+Number($("quantity").value);
+
+if(!q){
+
+$("calcResult").textContent="—";
+
+return;
+
 }
+
+$("calcResult").textContent=
+
+"$"+
+(
+Number(materials[i].price)/
+Number(materials[i].purchaseQty)
+*q
+).toFixed(2);
+
+}
+
 function openForm(){
- editing=-1;
- $("formTitle").textContent="Agregar material";$("saveBtn").textContent="Guardar material";
- $("home").classList.add("hidden");$("categoryView").classList.add("hidden");$("detailView").classList.add("hidden");$("formView").classList.remove("hidden");$("backBtn").classList.remove("hidden");
- $("materialForm").reset();populateCategorySelect();updatePreview();
+
+editing=-1;
+
+$("formTitle").textContent=
+"Agregar material";
+
+$("saveBtn").textContent=
+"Guardar material";
+
+$("home").classList.add("hidden");
+$("categoryView").classList.add("hidden");
+$("detailView").classList.add("hidden");
+$("formView").classList.remove("hidden");
+$("backBtn").classList.remove("hidden");
+
+$("materialForm").reset();
+
+populateCategorySelect();
+
+updatePreview();
+
 }
+
 function editMaterial(i){
- editing=i;const m=materials[i];
- $("formTitle").textContent="Editar material";$("saveBtn").textContent="Guardar cambios";
- $("home").classList.add("hidden");$("categoryView").classList.add("hidden");$("detailView").classList.add("hidden");$("formView").classList.remove("hidden");$("backBtn").classList.remove("hidden");
- $("name").value=m.name;$("price").value=m.price;$("purchaseUnit").value=m.purchaseUnit;$("calcUnit").value=m.calcUnit;$("purchaseQty").value=m.purchaseQty;$("supplier").value=m.supplier||"";$("photo").value="";
- populateCategorySelect(m.category);updatePreview();
+
+editing=i;
+
+const m=materials[i];
+
+$("formTitle").textContent=
+"Editar material";
+
+$("saveBtn").textContent=
+"Guardar cambios";
+
+$("home").classList.add("hidden");
+$("categoryView").classList.add("hidden");
+$("detailView").classList.add("hidden");
+$("formView").classList.remove("hidden");
+$("backBtn").classList.remove("hidden");
+
+$("name").value=m.name;
+$("price").value=m.price;
+$("purchaseUnit").value=m.purchaseUnit;
+$("calcUnit").value=m.calcUnit;
+$("purchaseQty").value=m.purchaseQty;
+$("supplier").value=m.supplier||"";
+$("photo").value="";
+
+populateCategorySelect(m.category);
+
+updatePreview();
+
 }
+
 function updatePreview(){
- const n=$("name").value.trim(),p=$("price").value,u=$("purchaseUnit").value,cu=$("calcUnit").value,q=$("purchaseQty").value;
- if(!n&&!p&&!q){$("previewText").textContent="Completa los datos para ver el resumen.";return;}
- $("previewText").textContent=(n||"Material")+" · $"+(p||"0.00")+" / "+u+" · "+(q||"0")+" "+cu;
+
+const n=
+$("name").value.trim();
+
+const p=
+$("price").value;
+
+const u=
+$("purchaseUnit").value;
+
+const cu=
+$("calcUnit").value;
+
+const q=
+$("purchaseQty").value;
+
+if(!n&&!p&&!q){
+
+$("previewText").textContent=
+"Completa los datos para ver el resumen.";
+
+return;
+
 }
+
+$("previewText").textContent=
+
+(n||"Material")
++
+" · $"
++
+(p||"0.00")
++
+" / "
++
+u
++
+" · "
++
+(q||"0")
++
+" "
++
+cu;
+
+}
+
 function saveMaterial(e){
- e.preventDefault();
- const file=$("photo").files[0];
- const finish=photo=>{
-  const old=editing>=0?materials[editing]:null;
-  const m={name:$("name").value.trim(),category:$("category").value,price:Number($("price").value),purchaseUnit:$("purchaseUnit").value,calcUnit:$("calcUnit").value,purchaseQty:Number($("purchaseQty").value),supplier:$("supplier").value.trim(),photo:photo||old?.photo||""};
-  if(editing>=0) materials[editing]=m; else materials.push(m);
-  persist();goHome();
- };
- if(file){const r=new FileReader();r.onload=()=>finish(r.result);r.readAsDataURL(file)}else finish("");
+
+e.preventDefault();
+
+const file=
+$("photo").files[0];
+
+const finish=photo=>{
+
+const old=
+editing>=0
+?materials[editing]
+:null;
+
+const m={
+
+name:$("name").value.trim(),
+
+category:$("category").value,
+
+price:Number($("price").value),
+
+purchaseUnit:$("purchaseUnit").value,
+
+calcUnit:$("calcUnit").value,
+
+purchaseQty:Number($("purchaseQty").value),
+
+supplier:$("supplier").value.trim(),
+
+photo:photo||old?.photo||""
+
+};
+
+if(editing>=0)
+materials[editing]=m;
+else
+materials.push(m);
+
+persist();
+
+goHome();
+
+};
+
+if(file){
+
+const r=new FileReader();
+
+r.onload=()=>
+finish(r.result);
+
+r.readAsDataURL(file);
+
+}else{
+
+finish("");
+
 }
+
+}
+
 function deleteMaterial(i){
- if(confirm("¿Eliminar este material?")){materials.splice(i,1);persist();goHome();}
+
+if(
+confirm("¿Eliminar este material?")
+){
+
+materials.splice(i,1);
+
+persist();
+
+goHome();
+
 }
+
+}
+
 function newCategory(){
- const name=prompt("Nombre de la nueva categoría:");
- if(!name?.trim())return;
 
- const clean=name.trim();
+const name=
+prompt(
+"Nombre de la nueva categoría:"
+);
 
- if(categories.some(c=>c[1].toLowerCase()===clean.toLowerCase())){
-   alert("Esa categoría ya existe.");
-   return;
- }
+if(!name?.trim())
+return;
 
- const icon=prompt(
-   "Escribe el icono para esta categoría:\n\n" +
-   "Ejemplos: 🔩 📄 📐 🕸️ 🧰 ⚙️ 🔧 🎨"
- );
+const clean=
+name.trim();
 
- if(!icon?.trim())return;
+if(
+categories.some(
+c=>
+c[1]
+.toLowerCase()
+===
+clean.toLowerCase()
+)
+){
 
- categories.push([icon.trim(),clean]);
+alert(
+"Esa categoría ya existe."
+);
 
- persist();
- renderCategories();
- populateCategorySelect();
+return;
+
 }
-function clearSearch(){$("search").value="";renderMaterials();$("search").focus();}
+
+const icon=
+prompt(
+
+"Escribe el icono para esta categoría:\n\n"
++
+"Ejemplos: 🔩 📄 📐 🕸️ 🧰 ⚙️ 🔧 🎨"
+
+);
+
+if(!icon?.trim())
+return;
+
+categories.push(
+[
+icon.trim(),
+clean
+]
+);
+
+persist();
+
+renderCategories();
+
+populateCategorySelect();
+
+}
+
+function clearSearch(){
+
+$("search").value="";
+
+renderMaterials();
+
+$("search").focus();
+
+}
+
 function goHome(){
- currentCategory="";editing=-1;
- $("home").classList.remove("hidden");$("categoryView").classList.add("hidden");$("detailView").classList.add("hidden");$("formView").classList.add("hidden");$("backBtn").classList.add("hidden");
- renderMaterials();
+
+currentCategory="";
+editing=-1;
+
+$("home").classList.remove("hidden");
+$("categoryView").classList.add("hidden");
+$("detailView").classList.add("hidden");
+$("formView").classList.add("hidden");
+$("backBtn").classList.add("hidden");
+
+renderMaterials();
+
 }
+
 init();
+
 </script>
+
 </body>
 </html>
