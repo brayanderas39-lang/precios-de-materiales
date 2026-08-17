@@ -106,7 +106,22 @@ function init(){
  $("search").addEventListener("input",renderMaterials);
  $("materialForm").addEventListener("submit",saveMaterial);
 }
-function deleteCategory(i){
+function renderCategories(){
+ $("categories").innerHTML=categories.map(([icon,name],i)=>
+ `<div class="cat" onclick="showCategory('${esc(name).replace(/'/g,"&#39;")}')">
+   <span>${icon}</span>
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+     <b>${esc(name)}</b>
+     <button onclick="event.stopPropagation();deleteCategory(${i})"
+       style="padding:6px 9px;border:0;border-radius:8px;background:#fee2e2;color:#991b1b">
+       🗑️
+     </button>
+   </div>
+ </div>`
+ ).join("");
+}
+ 
+ function deleteCategory(i){
  const category=categories[i][1];
 
  const hasMaterials=materials.some(m=>m.category===category);
