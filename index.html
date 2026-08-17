@@ -194,9 +194,26 @@ function deleteMaterial(i){
 function newCategory(){
  const name=prompt("Nombre de la nueva categoría:");
  if(!name?.trim())return;
+
  const clean=name.trim();
- if(categories.some(c=>c[1].toLowerCase()===clean.toLowerCase())){alert("Esa categoría ya existe.");return;}
- categories.push(["📦",clean]);persist();renderCategories();populateCategorySelect();
+
+ if(categories.some(c=>c[1].toLowerCase()===clean.toLowerCase())){
+   alert("Esa categoría ya existe.");
+   return;
+ }
+
+ const icon=prompt(
+   "Escribe el icono para esta categoría:\n\n" +
+   "Ejemplos: 🔩 📄 📐 🕸️ 🧰 ⚙️ 🔧 🎨"
+ );
+
+ if(!icon?.trim())return;
+
+ categories.push([icon.trim(),clean]);
+
+ persist();
+ renderCategories();
+ populateCategorySelect();
 }
 function clearSearch(){$("search").value="";renderMaterials();$("search").focus();}
 function goHome(){
