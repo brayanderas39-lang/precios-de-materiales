@@ -106,10 +106,23 @@ function init(){
  $("search").addEventListener("input",renderMaterials);
  $("materialForm").addEventListener("submit",saveMaterial);
 }
+function deleteCategory(i){
+ const category=categories[i][1];
 
-function renderCategories(){
- $("categories").innerHTML=categories.map(([icon,name])=>
- `<button class="cat" onclick="showCategory('${esc(name).replace(/'/g,"&#39;")}')"><span>${icon}</span>${esc(name)}</button>`).join("");
+ const hasMaterials=materials.some(m=>m.category===category);
+
+ if(hasMaterials){
+   alert("No puedes eliminar esta categoría porque tiene materiales guardados dentro de ella.");
+   return;
+ }
+
+ if(!confirm("¿Quieres eliminar la categoría \""+category+"\"?")) return;
+
+ categories.splice(i,1);
+
+ persist();
+ renderCategories();
+ populateCategorySelect();
 }
 function populateCategorySelect(selected){
  $("category").innerHTML=categories.map(([,name])=>`<option>${esc(name)}</option>`).join("");
